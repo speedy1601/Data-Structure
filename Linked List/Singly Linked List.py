@@ -327,11 +327,26 @@ class SinglyLinkedList:
                 return True
         
         return False
+    
+    def addTwoNumbers(self, l1: Node, l2: Node) -> Node: # https://leetcode.com/problems/add-two-numbers/description/
+        dummyHead = Node(-1)
+        prevNode, carry, sum = dummyHead, 0, 0
+
+        while l1 or l2:
+            sum = (l1.data if l1 else 0) + (l2.data if l2 else 0) + carry
+            prevNode.next = Node(sum % 10)
+            prevNode = prevNode.next
+            carry = (sum > 9)
+            l1, l2 = l1.next if l1 else None, l2.next if l2 else None
+
+        prevNode.next = Node(1) if carry else None
+        return dummyHead.next
 
 def main():
-    sll = SinglyLinkedList([1])
-    sll.printList()
-    print(sll.isPalindrome(sll.head))
+    sll = SinglyLinkedList([9,9,9,9,9,9,9])
+    sll1 = SinglyLinkedList([9,9,9,9])
+    # sll.printList()
+    sll.printList1(sll.addTwoNumbers(sll.head, sll1.head))
 
 if __name__ == '__main__':
     main()
