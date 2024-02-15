@@ -342,6 +342,22 @@ class SinglyLinkedList:
         prevNode.next = Node(1) if carry else None
         return dummyHead.next
 
+    def copyRandomList(self, head: Node) -> Node: # https://leetcode.com/problems/copy-list-with-random-pointer/
+        # make a copy of all the original node and store them in 'copyOf' dict
+        copyOf, curNode = { None: None}, head
+        while curNode:
+            copyOf[curNode] = Node(curNode.data)
+            curNode = curNode.next
+        
+        # link between the copy nodes by their next & random pointer
+        curNode = head
+        while curNode:
+            copyOf[curNode].next   = copyOf[curNode.next]
+            copyOf[curNode].random = copyOf[curNode.random]
+            curNode = curNode.next
+        
+        return copyOf[head]
+    
 def main():
     sll = SinglyLinkedList([9,9,9,9,9,9,9])
     sll1 = SinglyLinkedList([9,9,9,9])
