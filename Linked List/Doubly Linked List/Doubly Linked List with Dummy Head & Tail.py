@@ -1,5 +1,5 @@
 # dummyHead = the node before the head node, dummyTail = the node after the tail node.
-# Here head = self.dummyHead.next and tail = self.dummyTail.next always. So we don't even need to keep track of head and tail.
+# Here head = self.dummyHead.next and tail = self.dummyTail.prev always. So we don't even need to keep track of head and tail.
 
 class Node:
     def __init__(self, value) -> None:
