@@ -1,6 +1,7 @@
 # dummyHead = the node before the head node, dummyTail = the node after the tail node.
 # Here head = self.dummyHead.next and tail = self.dummyTail.prev always. So we don't even need to keep track of head and tail.
 # We just need to connect these 2 dummyNodes appropriately with the New Nodes.
+# https://leetcode.com/problems/design-linked-list/description/
 class Node:
     def __init__(self, value) -> None:
         self.data = value
