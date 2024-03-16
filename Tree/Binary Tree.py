@@ -166,11 +166,19 @@ class Tree:
         height, total_nodes = self.heights_and_total_nodes()
         return ((1 << (height+1)) - 1) == total_nodes # 2^(h+1) - 1 == n
     
+    def isSameTree(self, p: TreeNode, q: TreeNode) -> bool: #https://leetcode.com/problems/same-tree/description/
+        if p == None and q == None:
+            return True
+        if p == None or q == None or p.data != q.data:
+            return False
+        return self.isSameTree(p.left, q.left) == True and self.isSameTree(p.right, q.right) == True
+    
 def main():
     T = Tree()
-    for i in range(1, 8):
-        T.insert(i)
-    T.root.left.left = None
+    for i in range(1, 8): T.insert(i)
+    S = Tree()
+    for i in range(1, 8): S.insert(i)
+    S.root.left.left = None
     # T.queue[0].right = TreeNode(16)
     # T.queue[-1].right = TreeNode(17)
     # T.print_preOrder(T.root);  print()
@@ -183,8 +191,7 @@ def main():
     # print(T.is_exist(19))
     # print(T.is_perfect_binary_tree())
     # print(T.inorderTraversal(T.root))
-    T.print_postOrder(T.root); print()
-    print(T.postorderTraversal(T.root))
-
+    # print(T.postorderTraversal(T.root))
+    print(T.isSameTree(T.root, S.root))
 if __name__ == '__main__':
     main()
