@@ -2,7 +2,7 @@ from collections import deque
 import time
 class TreeNode:
     def __init__(self, value):
-        self.data = value
+        self.val = value
         self.left = None
         self.right = None
 
@@ -35,7 +35,7 @@ class Tree:
         while q:
             for _ in range(len(q)):
                 curNode = q.popleft()
-                print(curNode.data, end=' ')
+                print(curNode.val, end=' ')
                 if curNode.left:  q.append(curNode.left)
                 if curNode.right: q.append(curNode.right)
             print()
@@ -43,7 +43,7 @@ class Tree:
     def print_preOrder(self, root) -> None:
         if root == None:
             return
-        print(root.data, end=' ')
+        print(root.val, end=' ')
         self.print_preOrder(root.left)
         self.print_preOrder(root.right)
     
@@ -54,7 +54,7 @@ class Tree:
         while curNode or stack:
             while curNode:
                 stack.append(curNode)
-                preorderList.append(curNode.data)
+                preorderList.append(curNode.val)
                 curNode = curNode.left
             curNode = stack.pop().right
         
@@ -64,7 +64,7 @@ class Tree:
 
         # while stack:
         #     curNode = stack.pop()
-        #     preorderList.append(curNode.data)
+        #     preorderList.append(curNode.val)
         #     if curNode.right:
         #         stack.append(curNode.right)
         #     if curNode.left:
@@ -76,7 +76,7 @@ class Tree:
         if root == None:
             return
         self.print_inOrder(root.left)
-        print(root.data, end=' ')
+        print(root.val, end=' ')
         self.print_inOrder(root.right)
     
     def inorderTraversal(self, root: TreeNode) -> list[int]: # https://leetcode.com/problems/binary-tree-inorder-traversal/description/
@@ -88,7 +88,7 @@ class Tree:
                 stack.append(curNode)
                 curNode = curNode.left
             curNode = stack.pop()
-            inorderList.append(curNode.data)
+            inorderList.append(curNode.val)
             curNode = curNode.right
         
         return inorderList
@@ -98,7 +98,7 @@ class Tree:
             return
         self.print_postOrder(root.left)
         self.print_postOrder(root.right)
-        print(root.data, end=' ')
+        print(root.val, end=' ')
 
     def postorderTraversal(self, root: TreeNode) -> list[int]: # https://leetcode.com/problems/binary-tree-postorder-traversal/description/
         stack, postOrderList, visited = [], [], {None}
@@ -111,7 +111,7 @@ class Tree:
             
             curNode = stack[-1]
             while curNode and (curNode.left in visited and curNode.right in visited):
-                postOrderList.append(stack.pop().data) # stack.pop() == curNode
+                postOrderList.append(stack.pop().val) # stack.pop() == curNode
                 visited.add(curNode)
                 curNode = stack[-1] if stack else None
             curNode = stack[-1].right if stack else None
@@ -122,16 +122,16 @@ class Tree:
         def max_value_of(root) -> int: # similar to preOrder traversal where root process first, then root.left and root.right
             if root == None:
                 return float('-inf')
-            return max(root.data, max_value_of(root.left), max_value_of(root.right))
+            return max(root.val, max_value_of(root.left), max_value_of(root.right))
         return max_value_of(self.root)
     
     def tree_height(self) -> int: # distance from the Farthest Node to Root Node e.g. 4 -> 3, Distance from 3 to 4 is 1
         def heightOf(root) -> int:
             if root == None:
                 return -1
-            return max(1 + heightOf(root.left), 1 + heightOf(root.right))
+            return max(heightOf(root.left), heightOf(root.right)) + 1
         return heightOf(self.root)
-    
+
     def total_nodes(self) -> int:
         def total_nodes_from(root) -> int:
             if root == None:
@@ -150,7 +150,7 @@ class Tree:
         def search_from(root) -> bool:
             if root == None:
                 return False
-            return any((root.data == value, search_from(root.left), search_from(root.right)))
+            return any((root.val == value, search_from(root.left), search_from(root.right)))
         return search_from(self.root)
     
     def heights_and_total_nodes(self) -> tuple:
@@ -169,7 +169,7 @@ class Tree:
     def isSameTree(self, p: TreeNode, q: TreeNode) -> bool: # https://leetcode.com/problems/same-tree/description/
         if p == None and q == None:
             return True
-        if p == None or q == None or p.data != q.data:
+        if p == None or q == None or p.val != q.val:
             return False
         return self.isSameTree(p.left, q.left) == True and self.isSameTree(p.right, q.right) == True
     
@@ -177,18 +177,53 @@ class Tree:
         def isSameTree(p: TreeNode, q: TreeNode) -> bool:
             if p == None and q == None:
                 return True
-            if p == None or q == None or p.data != q.data:
+            if p == None or q == None or p.val != q.val:
                 return False
             return isSameTree(p.left, q.right) == True and isSameTree(p.right, q.left) == True
         
         return isSameTree(root.left, root.right)
+    
+    def maxDepth(self, root: TreeNode) -> int: # https://leetcode.com/problems/maximum-depth-of-binary-tree/
+        q, level = deque([root] if root else []), 0
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                if curNode.left:
+                    q.append(curNode.left)
+                if curNode.right:
+                    q.append(curNode.right)
+            level += 1
+        
+        return level
+    
+    def minDepth(self, root: TreeNode) -> int: # https://leetcode.com/problems/minimum-depth-of-binary-tree/
+        q, level = deque([root] if root else []), 0
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                if curNode.left == None and curNode.right == None:
+                    return level + 1
+                if curNode.left:
+                    q.append(curNode.left)
+                if curNode.right:
+                    q.append(curNode.right)
+            level += 1
+        
+        return level # this return level only work when root == None
+    
+    def hasPathSum(self, root: TreeNode, targetSum: int) -> bool: # https://leetcode.com/problems/path-sum/description/
+        if root == None: return False # Tree can be Empty, if Tree has min 1 node, don't need this if condition
+        if root.left == None and root.right == None:
+            return targetSum - root.val == 0
+        return self.hasPathSum(root.left, targetSum - root.val) == True or self.hasPathSum(root.right, targetSum - root.val) == True
     
 def main():
     T = Tree()
     for i in range(1, 8): T.insert(i)
     S = Tree()
     for i in range(1, 8): S.insert(i)
-    S.root.left.left = None
     # T.queue[0].right = TreeNode(16)
     # T.queue[-1].right = TreeNode(17)
     # T.print_preOrder(T.root);  print()
@@ -203,6 +238,9 @@ def main():
     # print(T.inorderTraversal(T.root))
     # print(T.postorderTraversal(T.root))
     # print(T.isSameTree(T.root, S.root))
-    print(T.isSymmetric(T.root))
+    # print(T.isSymmetric(T.root))
+    # print(T.maxDepth(T.root))
+    # print(T.minDepth(T.root))
+    print(T.hasPathSum(T.root, 12))
 if __name__ == '__main__':
     main()
