@@ -138,6 +138,9 @@ class Tree:
                 return 0
             return 1 + total_nodes_from(root.left) + total_nodes_from(root.right)
         return total_nodes_from(self.root)
+        
+        # if the Tree is Complete Binary Tree
+        # return self.countNodes(root)
     
     def total_leaf_nodes(self) -> int:
         def total_leaf_nodes_of_the_tree(root) -> int:
@@ -219,9 +222,29 @@ class Tree:
             return targetSum - root.val == 0
         return self.hasPathSum(root.left, targetSum - root.val) == True or self.hasPathSum(root.right, targetSum - root.val) == True
     
+    def countNodes(self, root: TreeNode) -> int: # https://leetcode.com/problems/count-complete-tree-nodes/
+        if root == None:
+            return 0
+        
+        leftHeight = rightHeight = 0
+        leftRoot = rightRoot = root
+
+        while leftRoot:
+            leftHeight += 1
+            leftRoot = leftRoot.left
+        while rightRoot:
+            rightHeight += 1
+            rightRoot = rightRoot.right
+        
+        if leftHeight == rightHeight:
+            return (1 << leftHeight) - 1
+        else:
+            return self.countNodes(root.left) + self.countNodes(root.right) + 1 # 1 for the root node
+    
 def main():
     T = Tree()
     for i in range(1, 8): T.insert(i)
+    T.root.left.left = None
     S = Tree()
     for i in range(1, 8): S.insert(i)
     # T.queue[0].right = TreeNode(16)
@@ -241,6 +264,7 @@ def main():
     # print(T.isSymmetric(T.root))
     # print(T.maxDepth(T.root))
     # print(T.minDepth(T.root))
-    print(T.hasPathSum(T.root, 12))
+    # print(T.hasPathSum(T.root, 12))
+    print(T.countNodes(T.root))
 if __name__ == '__main__':
     main()
