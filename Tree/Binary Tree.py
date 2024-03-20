@@ -240,11 +240,45 @@ class Tree:
             return (1 << leftHeight) - 1
         else:
             return self.countNodes(root.left) + self.countNodes(root.right) + 1 # 1 for the root node
+        
+    def binaryTreePaths(self, root: TreeNode) -> list[str]: # https://leetcode.com/problems/binary-tree-paths/description/
+        # ans = []
+
+        # def generateSubsets(Root: TreeNode, subset: list[int]) -> None:
+        #     if Root == None: return
+        #     subset.append(Root.val)
+        #     if Root.left == None and Root.right == None: # then it's a leaf node
+        #         ans.append('->'.join(map(str, subset)))
+        #         subset.pop()
+        #         return
+
+        #     generateSubsets(Root.left, subset)
+        #     generateSubsets(Root.right, subset)
+        #     subset.pop()
+        
+        # generateSubsets(root, [])
+        # return ans
+
+        ans, q = [], deque([(root, f"{root.val}")])
+
+        while q:
+            for _ in range(len(q)):
+                curNode, prevPath = q.popleft()
+                if curNode.left == None and curNode.right == None:
+                    ans.append(prevPath)
+                    continue
+                if curNode.left:
+                    q.append((curNode.left,  f"{prevPath}->{curNode.left.val}"))
+                if curNode.right:
+                    q.append((curNode.right, f"{prevPath}->{curNode.right.val}"))
+
+        return ans
+
     
 def main():
     T = Tree()
     for i in range(1, 8): T.insert(i)
-    T.root.left.left = None
+    # T.root.left.left = None
     S = Tree()
     for i in range(1, 8): S.insert(i)
     # T.queue[0].right = TreeNode(16)
@@ -265,6 +299,8 @@ def main():
     # print(T.maxDepth(T.root))
     # print(T.minDepth(T.root))
     # print(T.hasPathSum(T.root, 12))
-    print(T.countNodes(T.root))
+    # print(T.countNodes(T.root))
+    print(T.binaryTreePaths(T.root))
+
 if __name__ == '__main__':
     main()
