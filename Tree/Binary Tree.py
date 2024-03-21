@@ -329,13 +329,48 @@ class Tree:
         
         maxHeightOf(root)
         return diameter
+    
+    def findSecondMinimumValue(self, root: TreeNode) -> int: # https://leetcode.com/problems/second-minimum-node-in-a-binary-tree/
+        def find2ndMinFrom(Root: TreeNode) -> int:
+            if Root == None:
+                return float('inf')
+            curRootValue = Root.val if Root.val != root.val else float('inf')
+            return min(curRootValue, find2ndMinFrom(Root.left), find2ndMinFrom(Root.right))
+        
+        secondMin = min(find2ndMinFrom(root.left), find2ndMinFrom(root.right))
+        return secondMin if secondMin != float('inf') else -1
+    
+    def leafSimilar(self, root1: TreeNode, root2: TreeNode) -> bool: # https://leetcode.com/problems/leaf-similar-trees/description/
+        list1, list2 = [], []
+
+        def addLeafsFrom(root: TreeNode, listNo: int) -> None:
+            if root == None: return
+            if root.left == None and root.right == None:
+                if listNo == 1: list1.append(root.val)
+                else:           list2.append(root.val)
+            addLeafsFrom(root.left, listNo)
+            addLeafsFrom(root.right, listNo)
+        
+        addLeafsFrom(root1, 1)
+        addLeafsFrom(root2, 2)
+        return list1 == list2
+        
 
     
 def main():
     T = Tree()
-    for i in range(1, 8): T.insert(i)
-    # T.root.left.left = None
-    print(T.sumOfLeftLeaves(T.root))
+    T.root = TreeNode(1)
+    T.root.left = TreeNode(2)
+    T.root.left.left = TreeNode(3)
+    T.root.right = TreeNode(4)
+
+    S = Tree()
+    S.root = TreeNode(1)
+    S.root.left = TreeNode(2)
+    S.root.left.right = TreeNode(3)
+    S.root.right = TreeNode(4)
+
+    print(T.leafSimilar(T.root, S.root))
     
 
 if __name__ == '__main__':
