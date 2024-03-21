@@ -273,34 +273,70 @@ class Tree:
                     q.append((curNode.right, f"{prevPath}->{curNode.right.val}"))
 
         return ans
+    
+    def invertTree(self, root: TreeNode) -> TreeNode: # https://leetcode.com/problems/invert-binary-tree/description/
+        # if root == None:
+        #     return None
+        # root.left, root.right = root.right, root.left
+        # self.invertTree(root.left) # ofc after the above swapping, root.left and right both changed
+        # self.invertTree(root.right)
+        # return root
+
+        q = deque([root] if root else [])
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                curNode.left, curNode.right = curNode.right, curNode.left
+                if curNode.left:
+                    q.append(curNode.left)
+                if curNode.right:
+                    q.append(curNode.right)
+        
+        return root
+    
+    def sumOfLeftLeaves(self, root: TreeNode, rootIsleftNode = False) -> int: # https://leetcode.com/problems/sum-of-left-leaves/
+        # if root == None: return 0
+        # if rootIsleftNode and root.left == None and root.right == None:
+        #     return root.val
+        # return self.sumOfLeftLeaves(root.left, True) + self.sumOfLeftLeaves(root.right, False)
+
+        q, leftLeaves = deque([root] if root else []), 0
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                if curNode.left:
+                    q.append(curNode.left)
+                    if curNode.left.left == None and curNode.left.right == None: leftLeaves += curNode.left.val 
+                if curNode.right:
+                    q.append(curNode.right)
+        
+        return leftLeaves
+    
+    def diameterOfBinaryTree(self, root: TreeNode) -> int: # https://leetcode.com/problems/diameter-of-binary-tree/
+        diameter = 0
+
+        def maxHeightOf(Root: TreeNode) -> int:
+            nonlocal diameter
+            if Root == None:
+                return 0
+            leftHeight  = maxHeightOf(Root.left)
+            rightHeight = maxHeightOf(Root.right)
+
+            diameter = max(diameter, leftHeight + rightHeight) # diameter = max(old_Diameter, new_Diameter)
+            return max(leftHeight, rightHeight) + 1 # return max left/right height for the Root called this Root
+        
+        maxHeightOf(root)
+        return diameter
 
     
 def main():
     T = Tree()
     for i in range(1, 8): T.insert(i)
     # T.root.left.left = None
-    S = Tree()
-    for i in range(1, 8): S.insert(i)
-    # T.queue[0].right = TreeNode(16)
-    # T.queue[-1].right = TreeNode(17)
-    # T.print_preOrder(T.root);  print()
-    # T.print_inOrder(T.root);   print()
-    # T.print_postOrder(T.root); print()
-    # print(T.tree_max())
-    # print(T.tree_height())
-    # print(T.total_nodes())
-    # print(T.total_leaf_nodes())
-    # print(T.is_exist(19))
-    # print(T.is_perfect_binary_tree())
-    # print(T.inorderTraversal(T.root))
-    # print(T.postorderTraversal(T.root))
-    # print(T.isSameTree(T.root, S.root))
-    # print(T.isSymmetric(T.root))
-    # print(T.maxDepth(T.root))
-    # print(T.minDepth(T.root))
-    # print(T.hasPathSum(T.root, 12))
-    # print(T.countNodes(T.root))
-    print(T.binaryTreePaths(T.root))
+    print(T.sumOfLeftLeaves(T.root))
+    
 
 if __name__ == '__main__':
     main()
