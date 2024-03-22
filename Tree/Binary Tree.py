@@ -354,6 +354,20 @@ class Tree:
         addLeafsFrom(root1, 1)
         addLeafsFrom(root2, 2)
         return list1 == list2
+    
+    def levelOrder(self, root: TreeNode) -> list[list[int]]: # https://leetcode.com/problems/binary-tree-level-order-traversal/description/
+        ans = []
+
+        def addAllFrom(Root: TreeNode, level: int) -> None:
+            if Root == None: return
+            if level > len(ans):
+                ans.append([])
+            ans[level-1].append(Root.val)
+            addAllFrom(Root.left, level+1)
+            addAllFrom(Root.right, level+1)
+        
+        addAllFrom(root, 1)
+        return ans
         
 
     
@@ -370,7 +384,7 @@ def main():
     S.root.left.right = TreeNode(3)
     S.root.right = TreeNode(4)
 
-    print(T.leafSimilar(T.root, S.root))
+    print(T.levelOrder(T.root))
     
 
 if __name__ == '__main__':
