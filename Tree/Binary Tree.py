@@ -368,23 +368,35 @@ class Tree:
         
         addAllFrom(root, 1)
         return ans
+    
+    def levelOrderBottom(self, root: TreeNode) -> list[list[int]]: # https://leetcode.com/problems/binary-tree-level-order-traversal-ii/description/
+        q, ans = deque([root] if root else []), []
+
+        while q:
+            subList = []
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                subList.append(curNode.val)
+                if curNode.left:  q.append(curNode.left)
+                if curNode.right: q.append(curNode.right)
+            ans.append(subList)
         
+        for i in range(len(ans) >> 1):
+            ans[i], ans[-(i+1)] = ans[-(i+1)], ans[i]
+        return ans
 
     
 def main():
     T = Tree()
-    T.root = TreeNode(1)
-    T.root.left = TreeNode(2)
-    T.root.left.left = TreeNode(3)
-    T.root.right = TreeNode(4)
+    # for i in range(1, 8): T.insert(i)
+    T.root = TreeNode(3)
+    T.root.left = TreeNode(9)
+    T.root.right = TreeNode(20)
+    T.root.right.left = TreeNode(15)
+    T.root.right.right = TreeNode(7)
 
-    S = Tree()
-    S.root = TreeNode(1)
-    S.root.left = TreeNode(2)
-    S.root.left.right = TreeNode(3)
-    S.root.right = TreeNode(4)
 
-    print(T.levelOrder(T.root))
+    print(T.levelOrderBottom(T.root))
     
 
 if __name__ == '__main__':
