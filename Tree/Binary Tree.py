@@ -11,6 +11,22 @@ class Tree:
         self.root = None
         self.queue = deque() # it'll act like queue
     
+    # '23+4*' (1 digit and there will left and right must) : push if it's a number. If it's operator, pop the last 2 elements and build
+    # a tree which will act as a Left subtree for the next tree if there's need to build a tree next.
+    def __init__(self, postfix: str):
+        q = deque()
+
+        for ch in postfix:
+            if ch.isdigit():
+                q.append(TreeNode(ch))
+            else:
+                root = TreeNode(ch)
+                left, right = q.popleft(), q.popleft()
+                root.left, root.right = left, right
+                q.append(root) # since it will be Left subtree for next, push it as 'left'
+        
+        self.root = q.popleft() # at the end root will be in the q alone.
+    
     def insert(self, value) -> None:
         newNode = TreeNode(value)
         if self.root == None:
@@ -384,20 +400,14 @@ class Tree:
         for i in range(len(ans) >> 1):
             ans[i], ans[-(i+1)] = ans[-(i+1)], ans[i]
         return ans
+    
 
     
 def main():
-    T = Tree()
+    T = Tree('23+4*')
     # for i in range(1, 8): T.insert(i)
-    T.root = TreeNode(3)
-    T.root.left = TreeNode(9)
-    T.root.right = TreeNode(20)
-    T.root.right.left = TreeNode(15)
-    T.root.right.right = TreeNode(7)
-
-
-    print(T.levelOrderBottom(T.root))
-    
+    T.printLevelByLevel()
+    T.print_postOrder(T.root)
 
 if __name__ == '__main__':
     main()
