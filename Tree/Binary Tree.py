@@ -422,7 +422,7 @@ class Tree:
         
         return ans
     
-    def buildTree(self, preorder: List[int], inorder: List[int]) -> TreeNode: #https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/
+    def buildTree_(self, preorder: List[int], inorder: List[int]) -> TreeNode: #https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/
         if not preorder or not inorder:
             return None
         
@@ -432,10 +432,21 @@ class Tree:
         root.right = self.buildTree(preorder[idx+1:],  inorder[idx+1:])
         return root
     
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode: # https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+        if not inorder or not postorder:
+            return None
+        
+        root = TreeNode(postorder[-1])
+        idx = inorder.index(postorder[-1])
+        root.left  = self.buildTree(inorder[:idx],   postorder[:idx])
+        root.right = self.buildTree(inorder[idx+1:], postorder[idx:-1])
+        return root
+    
 def main():
     T = Tree()
     for i in range(1, 16): T.insert(i)
-    print(T.zigzagLevelOrder(T.root))
+    r = T.buildTree(inorder1 = [9,3,15,20,7], postorder1 = [9,15,7,20,3])
+    T.levelOrder(r)
 
 if __name__ == '__main__':
     main()
