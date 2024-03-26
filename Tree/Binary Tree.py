@@ -13,7 +13,7 @@ class Tree:
     
     # '23+4*' (1 digit and there will left and right must) : push if it's a number. If it's operator, pop the last 2 elements and build
     # a tree which will act as a Left subtree for the next tree if there's need to build a tree next.
-    def __init__(self, postfix: str):
+    def buildTree(self, postfix: str):
         q = deque()
 
         for ch in postfix:
@@ -401,13 +401,31 @@ class Tree:
             ans[i], ans[-(i+1)] = ans[-(i+1)], ans[i]
         return ans
     
+    def zigzagLevelOrder(self, root: TreeNode) -> list[list[int]]: # https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/description/
+        prevQ, ans, leftToRight = deque([root] if root else []), [], True
 
+        while prevQ:
+            curQ, sub = deque(), []
+
+            for _ in range(len(prevQ)):
+                curNode = prevQ.popleft()
+                sub.append(curNode.val)
+                if leftToRight:
+                    if curNode.left:  curQ.appendleft(curNode.left)
+                    if curNode.right: curQ.appendleft(curNode.right)
+                else:
+                    if curNode.right: curQ.appendleft(curNode.right)
+                    if curNode.left:  curQ.appendleft(curNode.left)
+
+            ans.append(sub)
+            prevQ, leftToRight = curQ, not leftToRight
+        
+        return ans
     
 def main():
-    T = Tree('23+4*')
-    # for i in range(1, 8): T.insert(i)
-    T.printLevelByLevel()
-    T.print_postOrder(T.root)
+    T = Tree()
+    for i in range(1, 16): T.insert(i)
+    print(T.zigzagLevelOrder(T.root))
 
 if __name__ == '__main__':
     main()
