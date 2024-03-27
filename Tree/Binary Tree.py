@@ -442,11 +442,30 @@ class Tree:
         root.right = self.buildTree(inorder[idx+1:], postorder[idx:-1])
         return root
     
+    def isCompleteTree(self, root: TreeNode) -> bool: # https://leetcode.com/problems/check-completeness-of-a-binary-tree/description/
+        q, aNoneFound = deque([root] if root else []), False
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+
+                if curNode.left:
+                    if aNoneFound: return False
+                    q.append(curNode.left)
+                else: aNoneFound = True
+
+                if curNode.right:
+                    if aNoneFound: return False
+                    q.append(curNode.right)
+                else: aNoneFound = True
+
+        return True
+    
 def main():
     T = Tree()
     for i in range(1, 16): T.insert(i)
-    r = T.buildTree(inorder1 = [9,3,15,20,7], postorder1 = [9,15,7,20,3])
-    T.levelOrder(r)
+    # T.root.right.left = None
+    print(T.isCompleteTree(T.root))
 
 if __name__ == '__main__':
     main()
