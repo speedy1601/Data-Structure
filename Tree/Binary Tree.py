@@ -443,21 +443,21 @@ class Tree:
         return root
     
     def isCompleteTree(self, root: TreeNode) -> bool: # https://leetcode.com/problems/check-completeness-of-a-binary-tree/description/
-        q, aNoneFound = deque([root] if root else []), False
+        q, aNoneFoundInFutureAlready = deque([root] if root else []), False
 
         while q:
             for _ in range(len(q)):
                 curNode = q.popleft()
 
-                if curNode.left:
-                    if aNoneFound: return False
+                if curNode.left: # if current future-node exists
+                    if aNoneFoundInFutureAlready: return False
                     q.append(curNode.left)
-                else: aNoneFound = True
+                else: aNoneFoundInFutureAlready = True
 
-                if curNode.right:
-                    if aNoneFound: return False
+                if curNode.right: # if current future-node exists
+                    if aNoneFoundInFutureAlready: return False
                     q.append(curNode.right)
-                else: aNoneFound = True
+                else: aNoneFoundInFutureAlready = True
 
         return True
     
