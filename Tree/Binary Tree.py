@@ -481,6 +481,7 @@ class Tree:
                     q.append((curNode.right, curNode))
             
             if xFound or yFound: return False
+            
         return False
     
 def main():
