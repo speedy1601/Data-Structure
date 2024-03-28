@@ -461,6 +461,28 @@ class Tree:
 
         return True
     
+    def isCousins(self, root: TreeNode, x: int, y: int) -> bool: # https://leetcode.com/problems/cousins-in-binary-tree/description/
+        q = deque([(root, 0)] if root else [])
+        xFound, yFound, parentofX, parentofY = False, False, 0, 0
+
+        while q:
+            for _ in range(len(q)):
+                curNode, parent = q.popleft()
+                if curNode.val == x:
+                    xFound, parentofX = True, parent.val
+                if curNode.val == y:
+                    yFound, parentofY = True, parent.val
+                if xFound and yFound:
+                    return parentofX != parentofY
+                
+                if curNode.left:
+                    q.append((curNode.left,  curNode))
+                if curNode.right:
+                    q.append((curNode.right, curNode))
+            
+            if xFound or yFound: return False
+        return False
+    
 def main():
     T = Tree()
     for i in range(1, 16): T.insert(i)
