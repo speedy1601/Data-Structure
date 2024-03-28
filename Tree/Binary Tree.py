@@ -481,14 +481,30 @@ class Tree:
                     q.append((curNode.right, curNode))
             
             if xFound or yFound: return False
-            
-        return False
+
+        return 
+    
+    def flatten(self, root: TreeNode) -> None: # https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+        prev = TreeNode(-1) # dummy node
+
+        def TraversePreOrderOf(Root: TreeNode) -> None:
+            nonlocal prev
+            if Root == None:
+                return
+            left, right = Root.left, Root.right
+            prev.right, Root.left = Root, None
+            prev = Root
+            TraversePreOrderOf(left)
+            TraversePreOrderOf(right)
+        
+        TraversePreOrderOf(root)
     
 def main():
     T = Tree()
-    for i in range(1, 16): T.insert(i)
+    for i in range(1,8): T.insert(i)
     # T.root.right.left = None
-    print(T.isCompleteTree(T.root))
+    T.flatten(T.root)
+    T.print_preOrder(T.root)
 
 if __name__ == '__main__':
     main()
