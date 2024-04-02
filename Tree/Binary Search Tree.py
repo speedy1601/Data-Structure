@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, defaultdict
 from typing import List
 class TreeNode:
     def __init__(self, value):
@@ -47,9 +47,12 @@ class BST:
         while q:
             for _ in range(len(q)):
                 curNode = q.popleft()
+                if curNode == None:
+                    print('null', end=' ')
+                    continue
                 print(curNode.val, end=' ')
-                if curNode.left:  q.append(curNode.left)
-                if curNode.right: q.append(curNode.right)
+                q.append(curNode.left)
+                q.append(curNode.right)
             print()
     
     def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode: # https://leetcode.com/problems/insert-into-a-binary-search-tree/description/
@@ -69,13 +72,28 @@ class BST:
         cur = root
         while cur and cur.val != val:
             cur = cur.left if val < cur.val else cur.right
-        return cur     
+        return cur
+    
+    def findMode(self, root: TreeNode) -> List[int]: # https://leetcode.com/problems/find-mode-in-binary-search-tree/description/
+        count, maxCount = defaultdict(lambda: 0), 0
+
+        def traverse(Root: TreeNode) -> None:
+            nonlocal maxCount
+            if Root == None: return
+            count[Root.val] += 1
+            maxCount = max(maxCount, count[Root.val])
+            traverse(Root.left); traverse(Root.right)
+        
+        traverse(root)
+        return [ k for k, v in count.items() if v == maxCount ]
 
 def main() -> None:
     T = BST()
-    for v in [8, 3, 10, 1, 6, 14]:
+    for v in [1, 1, 2, 2, 3, 0]:
         T.insert1(v)
     T.printLevelByLevel()
+
+    print(T.findMode(T.root))
 
 if __name__ == '__main__':
     main()
