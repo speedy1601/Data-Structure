@@ -52,7 +52,14 @@ class BST:
                 if curNode.right: q.append(curNode.right)
             print()
     
-    
+    def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode: # https://leetcode.com/problems/insert-into-a-binary-search-tree/description/
+        if root == None:
+            return TreeNode(val)
+        if val < root.val:
+            root.left  = self.insertIntoBST(root.left,  val)
+        else:
+            root.right = self.insertIntoBST(root.right, val)
+        return root
 
 def main() -> None:
     T = BST()
