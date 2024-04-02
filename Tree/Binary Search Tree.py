@@ -42,8 +42,8 @@ class BST:
         if addToLeft: prev.left  = TreeNode(val)
         else:         prev.right = TreeNode(val)
     
-    def printLevelByLevel(self) -> None:
-        q = deque([self.root] if self.root else [])
+    def printLevelByLevel(self, root = None) -> None:
+        q = deque([root] if root else [self.root] if self.root else [])
         while q:
             for _ in range(len(q)):
                 curNode = q.popleft()
@@ -55,11 +55,21 @@ class BST:
     def insertIntoBST(self, root: TreeNode, val: int) -> TreeNode: # https://leetcode.com/problems/insert-into-a-binary-search-tree/description/
         if root == None:
             return TreeNode(val)
-        if val < root.val:
-            root.left  = self.insertIntoBST(root.left,  val)
-        else:
-            root.right = self.insertIntoBST(root.right, val)
+        
+        cur, prev = root, None
+        while cur:
+            prev = cur
+            cur = cur.left if val < cur.val else cur.right
+        
+        if val < prev.val: prev.left  = TreeNode(val)
+        else:              prev.right = TreeNode(val)
         return root
+    
+    def searchBST(self, root: TreeNode, val: int) -> TreeNode: # https://leetcode.com/problems/search-in-a-binary-search-tree/description/
+        cur = root
+        while cur and cur.val != val:
+            cur = cur.left if val < cur.val else cur.right
+        return cur
 
 def main() -> None:
     T = BST()
