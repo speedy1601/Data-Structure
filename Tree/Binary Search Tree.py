@@ -69,7 +69,7 @@ class BST:
         cur = root
         while cur and cur.val != val:
             cur = cur.left if val < cur.val else cur.right
-        return cur    
+        return cur
 
 def main() -> None:
     T = BST()
