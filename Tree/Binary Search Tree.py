@@ -86,14 +86,31 @@ class BST:
         
         traverse(root)
         return [ k for k, v in count.items() if v == maxCount ]
+    
+    def getMinimumDifference(self, root: TreeNode) -> int: # https://leetcode.com/problems/minimum-absolute-difference-in-bst/description/
+        stack, curNode, prevNode, minDiff = [], root, None, float('inf')
+
+        while curNode or stack:
+            while curNode:
+                stack.append(curNode)
+                curNode = curNode.left
+            curNode = stack.pop()
+
+            if prevNode != None:
+                minDiff = min(minDiff, curNode.val - prevNode.val)
+            prevNode = curNode
+
+            curNode = curNode.right
+        
+        return minDiff
 
 def main() -> None:
     T = BST()
-    for v in [1, 1, 2, 2, 3, 0]:
+    for v in [8, 3, 1, 6, 10, 14, 13]:
         T.insert1(v)
     T.printLevelByLevel()
 
-    print(T.findMode(T.root))
+    print(T.getMinimumDifference(T.root))
 
 if __name__ == '__main__':
     main()
