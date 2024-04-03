@@ -103,6 +103,24 @@ class BST:
             curNode = curNode.right
         
         return minDiff
+    
+    def minDiffInBST(self, root: TreeNode) -> int: # https://leetcode.com/problems/minimum-distance-between-bst-nodes/description/
+        stack, curNode, prevNode, minDiff = [], root, None, float('inf')
+
+        while curNode or stack:
+            while curNode:
+                stack.append(curNode)
+                curNode = curNode.left
+            curNode = stack.pop()
+
+            if prevNode != None:
+                minDiff = min(minDiff, curNode.val - prevNode.val)
+            prevNode = curNode
+
+            curNode = curNode.right
+
+        return minDiff
+
 
 def main() -> None:
     T = BST()
