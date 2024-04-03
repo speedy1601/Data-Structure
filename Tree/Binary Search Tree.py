@@ -122,8 +122,7 @@ class BST:
         return minDiff
 
     def increasingBST(self, root: TreeNode) -> TreeNode: # https://leetcode.com/problems/increasing-order-search-tree/description/
-        dummyHead = TreeNode(-1)
-        prevNode = dummyHead
+        dummyHead = prevNode = TreeNode(-1)
 
         def inorderTraverse(curNode: TreeNode) -> None:
             nonlocal prevNode
