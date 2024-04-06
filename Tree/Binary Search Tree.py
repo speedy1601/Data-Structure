@@ -150,13 +150,33 @@ class BST:
                     q.append(curNode.right)
         
         return total
+    
+    def binarySearch(self, root: TreeNode, target: int) -> bool:
+        while root: # root passed as copy, so original root won't get modified
+            if root.val == target:
+                return True
+            root = root.left if target < root.val else root.right
+        return False
 
+    def findTarget(self, root: TreeNode, k: int) -> bool: # https://leetcode.com/problems/two-sum-iv-input-is-a-bst/description/
+        q = deque([root] if root else [])
+        
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                target  = k - curNode.val
+                if target != curNode.val and self.binarySearch(root, target) == True:
+                    return True
+                if curNode.left:  q.append(curNode.left)
+                if curNode.right: q.append(curNode.right)
+        
+        return False
 
 def main() -> None:
     T = BST()
-    for v in [10,5,15,3,7,13,18,1,6]:
+    for v in [5,3,6,2,4,7]:
         T.insert1(v)
-    print(T.rangeSumBST(T.root, low = 6, high = 10))
+    print(T.findTarget(T.root, k=9))
 
 if __name__ == '__main__':
     main()
