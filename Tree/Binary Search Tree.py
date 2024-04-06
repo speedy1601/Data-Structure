@@ -136,13 +136,27 @@ class BST:
         
         inorderTraverse(root)
         return dummyHead.right
+    
+    def rangeSumBST(self, root: TreeNode, low: int, high: int) -> int: # https://leetcode.com/problems/range-sum-of-bst/
+        q, total = deque([root] if root else []), 0
+
+        while q:
+            for _ in range(len(q)):
+                curNode = q.popleft()
+                total  += curNode.val if low <= curNode.val <= high else 0
+                if low  < curNode.val and curNode.left:
+                    q.append(curNode.left)
+                if high > curNode.val and curNode.right:
+                    q.append(curNode.right)
+        
+        return total
 
 
 def main() -> None:
     T = BST()
-    for v in [8, 3, 1, 6, 10, 14, 13]:
+    for v in [10,5,15,3,7,13,18,1,6]:
         T.insert1(v)
-    T.printLevelByLevel(T.increasingBST(T.root))
+    print(T.rangeSumBST(T.root, low = 6, high = 10))
 
 if __name__ == '__main__':
     main()
