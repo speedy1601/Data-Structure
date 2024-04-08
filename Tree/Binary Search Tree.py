@@ -171,12 +171,29 @@ class BST:
                 if curNode.right: q.append(curNode.right)
         
         return False
+    
+    def isValidBST(self, root: TreeNode) -> bool: # https://leetcode.com/problems/validate-binary-search-tree/description/
+        stack, curNode, prev_value = [], root, None
+
+        while curNode or stack:
+            while curNode:
+                stack.append(curNode)
+                curNode = curNode.left
+            curNode = stack.pop()
+            
+            if prev_value != None and curNode.val <= prev_value:
+                return False
+            prev_value = curNode.val
+
+            curNode = curNode.right
+        
+        return True
 
 def main() -> None:
     T = BST()
-    for v in [5,3,6,2,4,7]:
+    for v in [32,26,47,19,56,27]:
         T.insert1(v)
-    print(T.findTarget(T.root, k=9))
+    print(T.isValidBST(T.root))
 
 if __name__ == '__main__':
     main()
