@@ -211,12 +211,28 @@ class BST:
             first.val, middle.val = middle.val, first.val
         else:
             first.val, second.val = second.val, first.val
+    
+    def kthSmallest(self, root: TreeNode, k: int) -> int: # https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/
+        stack, curNode = [], root
 
+        while curNode or stack:
+            while curNode:
+                stack.append(curNode)
+                curNode = curNode.left
+            curNode = stack.pop()
+
+            if k == 1:
+                return curNode.val
+            k -= 1
+
+            curNode = curNode.right
+
+            
 def main() -> None:
     T = BST()
-    for v in [32,26,47,19,56,27]:
+    for v in [5,3,6,2,4,1]:
         T.insert1(v)
-    print(T.isValidBST(T.root))
+    print(T.kthSmallest(T.root, 3))
 
 if __name__ == '__main__':
     main()
