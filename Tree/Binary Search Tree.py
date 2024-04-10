@@ -188,6 +188,29 @@ class BST:
             curNode = curNode.right
         
         return True
+    
+    def recoverTree(self, root: TreeNode) -> None: # https://leetcode.com/problems/recover-binary-search-tree/description/
+        prevNode = first = middle = second = None
+
+        def inorderTraverse(curNode: TreeNode) -> None:
+            nonlocal prevNode, first, middle, second
+            if curNode == None or second: # no more recursion after second found
+                return
+            
+            inorderTraverse(curNode.left)
+            if prevNode != None and curNode.val < prevNode.val:
+                if first == None:
+                    first, middle = prevNode, curNode
+                else:
+                    second = curNode
+            prevNode = curNode
+            inorderTraverse(curNode.right)
+        
+        inorderTraverse(root)
+        if second == None:
+            first.val, middle.val = middle.val, first.val
+        else:
+            first.val, second.val = second.val, first.val
 
 def main() -> None:
     T = BST()
