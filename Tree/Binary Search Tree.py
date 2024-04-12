@@ -227,12 +227,43 @@ class BST:
 
             curNode = curNode.right
 
+    def getAllElements(self, root1: TreeNode, root2: TreeNode) -> List[int]: # https://leetcode.com/problems/all-elements-in-two-binary-search-trees/description/
+        stack1, stack2, curNode1, curNode2, ansList = [], [], root1, root2, []
+        go_left_for_root1 = go_left_for_root2 = True
+
+        while (curNode1 or stack1) or (curNode2 or stack2):
+            if go_left_for_root1 == True:
+                while curNode1:
+                    stack1.append(curNode1)
+                    curNode1 = curNode1.left
+                curNode1 = stack1.pop() if stack1 else None
+
+            if go_left_for_root2 == True:
+                while curNode2:
+                    stack2.append(curNode2)
+                    curNode2 = curNode2.left
+                curNode2 = stack2.pop() if stack2 else None
             
+            if (curNode1 and curNode2 and curNode1.val <= curNode2.val) or (curNode2 == None and curNode1):
+                ansList.append(curNode1.val)
+                curNode1 = curNode1.right
+                go_left_for_root1, go_left_for_root2 = True, False
+            else:
+                ansList.append(curNode2.val)
+                curNode2 = curNode2.right
+                go_left_for_root2, go_left_for_root1 = True, False
+        
+        return ansList
+
 def main() -> None:
-    T = BST()
-    for v in [5,3,6,2,4,1]:
+    T, S = BST(), BST()
+    for v in [4, 1, 8]:
         T.insert1(v)
-    print(T.kthSmallest(T.root, 3))
+    for v in [9, 1, 4, 3]:
+        S.insert1(v)
+
+    print(T.getAllElements(T.root, S.root))
+    
 
 if __name__ == '__main__':
     main()
