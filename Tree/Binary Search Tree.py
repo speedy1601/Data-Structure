@@ -255,15 +255,31 @@ class BST:
         
         return ansList
 
-def main() -> None:
-    T, S = BST(), BST()
-    for v in [4, 1, 8]:
-        T.insert1(v)
-    for v in [9, 1, 4, 3]:
-        S.insert1(v)
+    def bstFromPreorder(self, preorder: List[int]) -> TreeNode: # https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/description/
+        root = TreeNode(preorder[0])
+        stack, lastNode = [root], None
 
-    print(T.getAllElements(T.root, S.root))
+        for i in range(1, len(preorder)):
+            curNode = TreeNode(preorder[i])
+
+            if curNode.val < stack[-1].val:
+                stack[-1].left = curNode
+            else:
+                while stack and curNode.val > stack[-1].val:
+                    lastNode = stack.pop()
+                lastNode.right = curNode
+            
+            stack.append(curNode)
+        
+        return root
+
+
+def main() -> None:
+    T = BST()
+    print(T.printLevelByLevel(T.bstFromPreorder([8,5,1,7,10,12])))
     
 
 if __name__ == '__main__':
     main()
+
+from bisect import bisect_right
