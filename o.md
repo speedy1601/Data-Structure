@@ -127,3 +127,12 @@ terminals.
 1. Base: This is used to activate the transistor.
 2. Collector: It is the positive lead of the transistor.
 3. Emitter: It is the negative lead of the transistor.
+
+# Transistor:
+- A transistor is a miniature semiconductor device that can amplify or
+switch electrical signals and power. A typical transistor is composed of
+three layers of semiconductor materials or, more specifically,
+terminals.
+1. Base: This is used to activate the transistor.
+2. Collector: It is the positive lead of the transistor.
+3. Emitter: It is the negative lead of the transistor.
