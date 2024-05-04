@@ -33,14 +33,13 @@ class BST:
             self.root = TreeNode(val)
             return
         
-        cur, prev, addToLeft = self.root, None, True
+        cur, prev = self.root, None
         while cur:
             prev = cur
-            addToLeft = val < cur.val
             cur = cur.left if val < cur.val else cur.right
         
-        if addToLeft: prev.left  = TreeNode(val)
-        else:         prev.right = TreeNode(val)
+        if val < prev.val: prev.left  = TreeNode(val)
+        else:              prev.right = TreeNode(val)
     
     def printLevelByLevel(self, root = None) -> None:
         q = deque([root] if root else [self.root] if self.root else [])
@@ -272,14 +271,52 @@ class BST:
             stack.append(curNode)
         
         return root
+    
+    def targetNode(self, root: TreeNode, key: int) -> tuple[TreeNode]:
+        cur, parent = root, None
+        while cur:
+            if cur.val == key:
+                return (cur, parent)
+            parent = cur
+            cur = cur.left if key < cur.val else cur.right
+        return (None, None)
+
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+        keyNode, parentKeyNode = self.targetNode(root, key)
+        if parentKeyNode != None:
+            if keyNode.val < parentKeyNode.val: parentKeyNode.left  = None
+            else:                               parentKeyNode.right = None
+        newRoot = (root.left if root.left else root.right) if root and keyNode == root else root
+        
+        def insertNode(node: TreeNode) -> None:
+            if node.val != newRoot.val:
+                cur, prev = newRoot, None
+                while cur:
+                    prev = cur
+                    cur  = cur.left if node.val < cur.val else cur.right
+                if node.val < prev.val: prev.left  = node
+                else:                   prev.right = node
+
+        def traverseSubtree(curNode: TreeNode) -> None:
+            if curNode:
+                left, right = curNode.left, curNode.right
+                curNode.left = curNode.right = None
+                insertNode(curNode)
+                traverseSubtree(left)
+                traverseSubtree(right)
+        
+        if keyNode:
+            traverseSubtree(keyNode.left)
+            traverseSubtree(keyNode.right)
+        return newRoot
+
 
 
 def main() -> None:
     T = BST()
-    print(T.printLevelByLevel(T.bstFromPreorder([8,5,1,7,10,12])))
-    
+    for v in [8,5,10,4,7,3,6]:
+        T.insert1(v)
+    T.printLevelByLevel(T.deleteNode(T.root, 5))
 
 if __name__ == '__main__':
     main()
-
-from bisect import bisect_right
