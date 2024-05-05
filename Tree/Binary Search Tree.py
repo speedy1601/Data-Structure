@@ -281,7 +281,7 @@ class BST:
             cur = cur.left if key < cur.val else cur.right
         return (None, None)
 
-    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode: # https://leetcode.com/problems/delete-node-in-a-bst/description/
         keyNode, parentKeyNode = self.targetNode(root, key)
         if keyNode == None:
             return root
