@@ -283,40 +283,34 @@ class BST:
 
     def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
         keyNode, parentKeyNode = self.targetNode(root, key)
-        if parentKeyNode != None:
-            if keyNode.val < parentKeyNode.val: parentKeyNode.left  = None
-            else:                               parentKeyNode.right = None
-        newRoot = (root.left if root.left else root.right) if root and keyNode == root else root
+        if keyNode == None:
+            return root
         
-        def insertNode(node: TreeNode) -> None:
-            if node.val != newRoot.val:
-                cur, prev = newRoot, None
-                while cur:
-                    prev = cur
-                    cur  = cur.left if node.val < cur.val else cur.right
-                if node.val < prev.val: prev.left  = node
-                else:                   prev.right = node
+        newSubRoot = keyNode.left if keyNode.left else keyNode.right
 
-        def traverseSubtree(curNode: TreeNode) -> None:
-            if curNode:
-                left, right = curNode.left, curNode.right
-                curNode.left = curNode.right = None
-                insertNode(curNode)
-                traverseSubtree(left)
-                traverseSubtree(right)
+        if keyNode.right != None and keyNode.right != newSubRoot:
+            cur, prev = newSubRoot, None
+            while cur:
+                prev = cur
+                cur  = cur.left if keyNode.right.val < cur.val else cur.right
+            if keyNode.right.val < prev.val: prev.left  = keyNode.right
+            else:                            prev.right = keyNode.right
         
-        if keyNode:
-            traverseSubtree(keyNode.left)
-            traverseSubtree(keyNode.right)
-        return newRoot
+        if parentKeyNode:
+            if keyNode.val < parentKeyNode.val: parentKeyNode.left  = newSubRoot
+            else:                               parentKeyNode.right = newSubRoot
+        
+        return root if root != keyNode else newSubRoot
 
 
 
 def main() -> None:
     T = BST()
-    for v in [8,5,10,4,7,3,6]:
+    for v in [2, 1]:
         T.insert1(v)
-    T.printLevelByLevel(T.deleteNode(T.root, 5))
+    T.printLevelByLevel()
+    print()
+    T.printLevelByLevel(T.deleteNode(T.root, 1))
 
 if __name__ == '__main__':
     main()
