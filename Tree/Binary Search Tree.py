@@ -301,16 +301,53 @@ class BST:
             else:                               parentKeyNode.right = newSubRoot
         
         return root if root != keyNode else newSubRoot
+    
+    def replace(self, curNode: TreeNode, parentNode: TreeNode, replaceNode:  TreeNode) -> None:
+        if curNode.val < parentNode.val: # means curNode is the left child of parentNode
+            parentNode.left  = replaceNode
+        else: # means curNode is the right child of parentNode
+            parentNode.right = replaceNode
+
+    def trimBST(self, root: TreeNode, low: int, high: int) -> TreeNode: # https://leetcode.com/problems/trim-a-binary-search-tree/
+        # if root == None:
+        #     return None
+        
+        # if root.val < low:
+        #     return self.trimBST(root.right, low, high)
+        # elif root.val > high:
+        #     return self.trimBST(root.left,  low, high)
+        # else:
+        #     root.left  = self.trimBST(root.left,  low, high)
+        #     root.right = self.trimBST(root.right, low, high)
+        #     return root
+        dummyRoot = TreeNode(10001); dummyRoot.left = root
+        q = deque([(root, dummyRoot)])
+
+        while q:
+            for _ in range(len(q)):
+                curNode, parentNode = q.popleft()
+
+                if curNode.val < low:
+                    self.replace(curNode, parentNode, curNode.right)
+                    if curNode.right: q.append((curNode.right, parentNode))
+                elif curNode.val > high:
+                    self.replace(curNode, parentNode, curNode.left)
+                    if curNode.left:  q.append((curNode.left,  parentNode))
+                else:
+                    if curNode.left:  q.append((curNode.left,  curNode))
+                    if curNode.right: q.append((curNode.right, curNode))
+        
+        return dummyRoot.left
 
 
 
 def main() -> None:
     T = BST()
-    for v in [2, 1]:
+    for v in [50, 30, 70, 23, 35, 63, 80, 11, 25, 32, 42, 72, 85]:
         T.insert1(v)
     T.printLevelByLevel()
     print()
-    T.printLevelByLevel(T.deleteNode(T.root, 1))
+    T.printLevelByLevel(T.trimBST(T.root, 32, 90))
 
 if __name__ == '__main__':
     main()
