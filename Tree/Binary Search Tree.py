@@ -339,15 +339,45 @@ class BST:
         
         return dummyRoot.left
 
+    def convertBST(self, root: TreeNode) -> TreeNode: # https://leetcode.com/problems/convert-bst-to-greater-tree/
+        # nextGreaterModifiedKey = 0
+        
+        # def inorderTraversal(curNode: TreeNode) -> None:
+        #     nonlocal nextGreaterModifiedKey
+        #     if curNode == None:
+        #         return
+            
+        #     inorderTraversal(curNode.right)
+        #     curNode.val += nextGreaterModifiedKey #
+        #     nextGreaterModifiedKey =  curNode.val #
+        #     inorderTraversal(curNode.left)
+        
+        # inorderTraversal(root)
+        # return root
 
+        stack, curNode, nextGreaterModifiedKey = [], root, 0
+
+        while curNode or stack:
+            while curNode:
+                stack.append(curNode)
+                curNode = curNode.right
+            curNode = stack.pop()
+            
+            curNode.val += nextGreaterModifiedKey #
+            nextGreaterModifiedKey =  curNode.val #
+
+            curNode = curNode.left
+        
+        return root
 
 def main() -> None:
     T = BST()
-    for v in [50, 30, 70, 23, 35, 63, 80, 11, 25, 32, 42, 72, 85]:
+    for v in [4,1,6,0,2,5,7,3,8]:
         T.insert1(v)
     T.printLevelByLevel()
     print()
-    T.printLevelByLevel(T.trimBST(T.root, 32, 90))
+    T.convertBST(T.root)
+    T.printLevelByLevel()
 
 if __name__ == '__main__':
     main()
