@@ -514,7 +514,7 @@ class Tree:
                 parentNode.left  = childNode # nodeOf[parent].left  = nodeOf[child]
             else:
                 parentNode.right = childNode # nodeOf[parent].right = nodeOf[child]
-            nodeList[child][1] = 1 if isLeft else 2
+            nodeList[child][1] = 1 if isLeft else 2 # marking the child node as Left Child or Right Child
         
         for nodeValue, [node, isRoot] in nodeList.items():
             if isRoot == 0: # for root, isRoot = 0
