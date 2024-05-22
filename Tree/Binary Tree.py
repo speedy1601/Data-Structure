@@ -500,7 +500,7 @@ class Tree:
         TraversePreOrderOf(root)
     
     def createBinaryTree(self, descriptions: List[List[int]]) -> TreeNode:
-        nodeList = defaultdict(lambda: [None, 0]) # [TreeNode, root/left_child/right_child (0/1/2)]
+        nodeList = defaultdict(lambda: [None, True]) # [TreeNode, root/child (True/False)]
         parentNode = childNode = None
 
         for (parent, child, isLeft) in descriptions:
@@ -514,10 +514,10 @@ class Tree:
                 parentNode.left  = childNode # nodeOf[parent].left  = nodeOf[child]
             else:
                 parentNode.right = childNode # nodeOf[parent].right = nodeOf[child]
-            nodeList[child][1] = 1 if isLeft else 2 # marking the child node as Left Child or Right Child
+            nodeList[child][1] = False # marking child node as Not_Root i.e. False
         
         for nodeValue, [node, isRoot] in nodeList.items():
-            if isRoot == 0: # for root, isRoot = 0
+            if isRoot: # for root, isRoot = True
                 return node
     
 def main():
