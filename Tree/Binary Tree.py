@@ -1,4 +1,4 @@
-from collections import deque
+from collections import deque, defaultdict
 from typing import List
 class TreeNode:
     def __init__(self, value):
@@ -498,6 +498,27 @@ class Tree:
             TraversePreOrderOf(right)
         
         TraversePreOrderOf(root)
+    
+    def createBinaryTree(self, descriptions: List[List[int]]) -> TreeNode:
+        nodeList = defaultdict(lambda: [None, 0]) # [TreeNode, root/left_child/right_child (0/1/2)]
+        parentNode = childNode = None
+
+        for (parent, child, isLeft) in descriptions:
+            if parent not in nodeList:
+                nodeList[parent][0] = TreeNode(parent)
+            if child  not in nodeList:
+                nodeList[child][0]  = TreeNode(child)
+            
+            parentNode, childNode = nodeList[parent][0], nodeList[child][0]
+            if isLeft:
+                parentNode.left  = childNode # nodeOf[parent].left  = nodeOf[child]
+            else:
+                parentNode.right = childNode # nodeOf[parent].right = nodeOf[child]
+            nodeList[child][1] = 1 if isLeft else 2
+        
+        for nodeValue, [node, isRoot] in nodeList.items():
+            if isRoot == 0: # for root, isRoot = 0
+                return node
     
 def main():
     T = Tree()

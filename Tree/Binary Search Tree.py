@@ -420,14 +420,13 @@ class BST:
         
         return buildTreeFrom(head, None)
 
-
 def main() -> None:
     T = BST()
     # for v in [6,2,8,0,4,7,9,3,5]:
     #     T.insert1(v)
     #T.printLevelByLevel()
     #print()
-    T.printLevelByLevel(T.sortedArrayToBST([1,2,3,4,5,6,7,8]))
+    T.printLevelByLevel()
 
 if __name__ == '__main__':
     main()
