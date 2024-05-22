@@ -499,7 +499,7 @@ class Tree:
         
         TraversePreOrderOf(root)
     
-    def createBinaryTree(self, descriptions: List[List[int]]) -> TreeNode:
+    def createBinaryTree(self, descriptions: List[List[int]]) -> TreeNode: # https://leetcode.com/problems/create-binary-tree-from-descriptions/
         nodeList = defaultdict(lambda: [None, True]) # [TreeNode, root/child (True/False)]
         parentNode = childNode = None
 
