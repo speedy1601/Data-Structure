@@ -1,5 +1,11 @@
 from collections import deque, defaultdict
 from typing import List
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
 class TreeNode:
     def __init__(self, value):
         self.val = value
@@ -369,15 +375,59 @@ class BST:
             curNode = curNode.left
         
         return root
+    
+    def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode: # https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
+        a, b = ( min(p.val, q.val), max(p.val, q.val) )
+        curNode = root
+
+        while curNode:
+            if a <= curNode.val <= b:
+                return curNode
+            curNode = curNode.left if a < curNode.val > b else curNode.right
+    
+    def sortedArrayToBST(self, nums: list[int]) -> TreeNode: # https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/description/
+
+        def buildTreeFrom(start:int, end:int) -> TreeNode:
+            if start > end:
+                return None
+            
+            mid  = (start + end + 1) >> 1
+            root = TreeNode(nums[mid])
+            root.left  = buildTreeFrom(start, mid - 1)
+            root.right = buildTreeFrom(mid + 1, end)
+            return root
+            
+        return buildTreeFrom(0, len(nums) - 1)
+    
+    def MidNode(self, startNode: ListNode, endNode: ListNode) -> ListNode:
+        slow = fast = startNode
+        while fast != endNode and fast.next != endNode:
+            slow = slow.next
+            fast = fast.next.next
+        return slow
+
+    def sortedListToBST(self, head: ListNode) -> TreeNode: # https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/description/
+
+        def buildTreeFrom(startNode: ListNode, endNode: ListNode) -> TreeNode:
+            if startNode == endNode:
+                return None
+            
+            midNode  = self.MidNode(startNode, endNode)
+            root = TreeNode(midNode.val)
+            root.left  = buildTreeFrom(startNode, midNode)
+            root.right = buildTreeFrom(midNode.next, endNode)
+            return root
+        
+        return buildTreeFrom(head, None)
+
 
 def main() -> None:
     T = BST()
-    for v in [4,1,6,0,2,5,7,3,8]:
-        T.insert1(v)
-    T.printLevelByLevel()
-    print()
-    T.convertBST(T.root)
-    T.printLevelByLevel()
+    # for v in [6,2,8,0,4,7,9,3,5]:
+    #     T.insert1(v)
+    #T.printLevelByLevel()
+    #print()
+    T.printLevelByLevel(T.sortedArrayToBST([1,2,3,4,5,6,7,8]))
 
 if __name__ == '__main__':
     main()
