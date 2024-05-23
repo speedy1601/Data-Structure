@@ -420,13 +420,42 @@ class BST:
         
         return buildTreeFrom(head, None)
 
+class BSTIterator: # https://leetcode.com/problems/binary-search-tree-iterator/
+
+    def __init__(self, root: TreeNode):
+        self.stack = []
+        self.curNode = root
+
+    def next(self) -> int:
+        while self.curNode:
+            self.stack.append(self.curNode)
+            self.curNode = self.curNode.left
+        self.curNode = resultNode = self.stack.pop()
+        
+        self.curNode = self.curNode.right
+        return resultNode.val
+
+    def hasNext(self) -> bool:
+        return True if self.curNode or self.stack else False
+
 def main() -> None:
     T = BST()
-    # for v in [6,2,8,0,4,7,9,3,5]:
-    #     T.insert1(v)
+    for v in [7, 3, 15, 9, 20]:
+        T.insert1(v)
     #T.printLevelByLevel()
     #print()
-    T.printLevelByLevel()
+    #T.printLevelByLevel()
+    B = BSTIterator(T.root)
+    print(B.next())
+    print(B.next())
+    print(B.hasNext())
+    print(B.next())
+    print(B.hasNext())
+    print(B.next())
+    print(B.hasNext())
+    print(B.next())
+    print(B.hasNext())
+    
 
 if __name__ == '__main__':
     main()
