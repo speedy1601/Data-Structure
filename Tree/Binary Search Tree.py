@@ -1,5 +1,6 @@
 from collections import deque, defaultdict
 from typing import List
+from math import factorial, prod
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -419,6 +420,38 @@ class BST:
             return root
         
         return buildTreeFrom(head, None)
+    
+    def numTrees(self, n: int) -> int:
+        # dp = [-1] * (n+1)                       # recursion
+        # dp[0] = dp[1] = 1
+
+        # def numberOfUniqueTreesFor(curNum: int) -> int:
+        #     if dp[curNum] != -1:
+        #         return dp[curNum]
+            
+        #     total = 0
+        #     for root in range(1, curNum+1):
+        #         total += (numberOfUniqueTreesFor(root-1) * numberOfUniqueTreesFor(curNum-root))
+        #     dp[curNum] = total
+        #     #dp[curNum] = sum(numberOfUniqueTreesFor(root-1) * numberOfUniqueTreesFor(curNum-root) for root in range(1, curNum+1))
+        #     return dp[curNum]
+        
+        # return numberOfUniqueTreesFor(n)
+
+        # dp = [-1] * (n+1)                          # tabulation
+        # dp[0] = dp[1] = 1
+
+        # for curNum in range(1, n+1):
+        #     dp[curNum] = sum(dp[root-1] * dp[curNum-root] for root in range(1, curNum+1))
+        
+        # return dp[n]
+
+        nF = factorial(n)
+        a = nF * prod( i for i in range(n+1, (n<<1)+1) ) # (2n)!
+        b = nF * (n+1) # (n+1)!
+        
+        return a // (b * nF)
+
 
 class BSTIterator: # https://leetcode.com/problems/binary-search-tree-iterator/
 
@@ -445,16 +478,7 @@ def main() -> None:
     #T.printLevelByLevel()
     #print()
     #T.printLevelByLevel()
-    B = BSTIterator(T.root)
-    print(B.next())
-    print(B.next())
-    print(B.hasNext())
-    print(B.next())
-    print(B.hasNext())
-    print(B.next())
-    print(B.hasNext())
-    print(B.next())
-    print(B.hasNext())
+    print(T.numTrees(4))
     
 
 if __name__ == '__main__':
