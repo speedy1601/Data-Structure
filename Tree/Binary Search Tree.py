@@ -422,7 +422,7 @@ class BST:
         
         return buildTreeFrom(head, None)
     
-    def numTrees(self, n: int) -> int:
+    def numTrees(self, n: int) -> int: # https://leetcode.com/problems/unique-binary-search-trees/description/
         # dp = [-1] * (n+1)                       # recursion
         # dp[0] = dp[1] = 1
 
