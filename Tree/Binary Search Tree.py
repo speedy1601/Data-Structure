@@ -1,6 +1,7 @@
 from collections import deque, defaultdict
-from typing import List
+from typing import List, Optional
 from math import factorial, prod
+from itertools import product
 # Definition for singly-linked list.
 class ListNode:
     def __init__(self, val=0, next=None):
@@ -8,10 +9,10 @@ class ListNode:
         self.next = next
 
 class TreeNode:
-    def __init__(self, value):
+    def __init__(self, value, left = None, right = None):
         self.val = value
-        self.left = None
-        self.right = None
+        self.left = left
+        self.right = right
 
 class BST:
     def __init__(self):
@@ -451,6 +452,25 @@ class BST:
         b = nF * (n+1) # (n+1)!
         
         return a // (b * nF)
+    
+    def generateTrees(self, n: int) -> List[Optional[TreeNode]]: # https://leetcode.com/problems/unique-binary-search-trees-ii/description/
+        def generateUniqueSubtreesFrom(start:int, end:int) -> list[TreeNode]:
+            if start > end: # means we can't generate any tree axcept empty tree
+                return [None]
+            
+            allTrees = list()
+            for rootVal in range(start, end+1):
+                leftSubTrees  = generateUniqueSubtreesFrom(start, rootVal - 1)
+                rightSubTrees = generateUniqueSubtreesFrom(rootVal + 1, end)
+
+                for leftTree in leftSubTrees:
+                    for rightTree in rightSubTrees:
+                        currentUniqueTree = TreeNode(rootVal, leftTree, rightTree) # create the current complete unique tree
+                        allTrees.append(currentUniqueTree)
+            
+            return allTrees
+        
+        return generateUniqueSubtreesFrom(1, n)
 
 
 class BSTIterator: # https://leetcode.com/problems/binary-search-tree-iterator/
@@ -473,12 +493,14 @@ class BSTIterator: # https://leetcode.com/problems/binary-search-tree-iterator/
 
 def main() -> None:
     T = BST()
-    for v in [7, 3, 15, 9, 20]:
+    for v in [1,2,3]:
         T.insert1(v)
     #T.printLevelByLevel()
     #print()
     #T.printLevelByLevel()
-    print(T.numTrees(4))
+    for root in T.generateTrees(3):
+        T.printLevelByLevel(root)
+        print()
     
 
 if __name__ == '__main__':
