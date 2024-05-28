@@ -542,7 +542,6 @@ class Tree:
         
         find_P_or_Q_or_BOTH_from(root)
         return LCA
-
     
 def main():
     T = Tree()
