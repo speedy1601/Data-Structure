@@ -51,9 +51,12 @@ class Tree:
         while q:
             for _ in range(len(q)):
                 curNode = q.popleft()
-                print(curNode.val, end=' ')
-                if curNode.left:  q.append(curNode.left)
-                if curNode.right: q.append(curNode.right)
+                if curNode == None:
+                    print(None, end=' ')
+                else:
+                    print(curNode.val, end=' ')
+                    q.append(curNode.left)
+                    q.append(curNode.right)
             print()
     
     def print_preOrder(self, root) -> None:
@@ -519,13 +522,36 @@ class Tree:
         for nodeValue, [node, isRoot] in nodeList.items():
             if isRoot: # for root, isRoot = True
                 return node
+        
+    def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode: # https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/description/
+        LCA = None
+
+        def find_P_or_Q_or_BOTH_from(curRoot: TreeNode) -> bool:
+            nonlocal LCA
+            if curRoot == None or LCA != None: # the moment LCA exists, recursion will stop and will go back to Function Call only 
+                return False                   # if LCA exists, this False doesn't matter but LCA does only!
+            
+            found_in_left  = find_P_or_Q_or_BOTH_from(curRoot.left)
+            found_in_right = find_P_or_Q_or_BOTH_from(curRoot.right)
+            P_or_Q_is_curRoot = (curRoot == p or curRoot == q)
+            
+            if (found_in_left and found_in_right) or (P_or_Q_is_curRoot and (found_in_left or found_in_right)):
+                LCA = curRoot
+
+            return found_in_left or found_in_right or P_or_Q_is_curRoot
+        
+        find_P_or_Q_or_BOTH_from(root)
+        return LCA
+
     
 def main():
     T = Tree()
-    for i in range(1,8): T.insert(i)
-    # T.root.right.left = None
-    T.flatten(T.root)
-    T.print_preOrder(T.root)
+    for i in [3,5,1,6,2,0,8,7,4]: T.insert(i)
+
+    T.printLevelByLevel()
+    print()
+
+    print(T.lowestCommonAncestor(T.root, 5, 1).val)
 
 if __name__ == '__main__':
     main()
