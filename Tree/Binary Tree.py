@@ -543,6 +543,25 @@ class Tree:
         find_P_or_Q_or_BOTH_from(root)
         return LCA
     
+    def isBalanced(self, root: TreeNode) -> bool: # https://leetcode.com/problems/balanced-binary-tree/description/
+        treeIsbalanced = True
+
+        def depthOf(curRoot: TreeNode) -> int:
+            nonlocal treeIsbalanced
+            if curRoot == None or treeIsbalanced == False:
+                return -1
+            
+            leftSubtreeDepth = 1 + depthOf(curRoot.left)
+            righSubtreeDepth = 1 + depthOf(curRoot.right)
+
+            if abs(leftSubtreeDepth - righSubtreeDepth) > 1:
+                treeIsbalanced = False
+            
+            return max(leftSubtreeDepth, righSubtreeDepth)
+        
+        depthOf(root)
+        return treeIsbalanced
+    
 def main():
     T = Tree()
     for i in [3,5,1,6,2,0,8,7,4]: T.insert(i)
