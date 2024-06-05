@@ -289,26 +289,31 @@ class BST:
             cur = cur.left if key < cur.val else cur.right
         return (None, None)
 
-    def deleteNode(self, root: TreeNode, key: int) -> TreeNode: # https://leetcode.com/problems/delete-node-in-a-bst/description/
-        keyNode, parentKeyNode = self.targetNode(root, key)
-        if keyNode == None:
-            return root
-        
-        newSubRoot = keyNode.left if keyNode.left else keyNode.right
+    def successor_node_of(self, parentOfRoot: TreeNode, root: TreeNode) -> tuple[TreeNode]:
+        while root.right:
+            parentOfRoot = root
+            root = root.right
+        return (root, parentOfRoot) # (successor, parentOfSuccessor)
 
-        if keyNode.right != None and keyNode.right != newSubRoot:
-            cur, prev = newSubRoot, None
-            while cur:
-                prev = cur
-                cur  = cur.left if keyNode.right.val < cur.val else cur.right
-            if keyNode.right.val < prev.val: prev.left  = keyNode.right
-            else:                            prev.right = keyNode.right
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode: # https://leetcode.com/problems/delete-node-in-a-bst/description/
+        if root == None:
+            return None
         
-        if parentKeyNode:
-            if keyNode.val < parentKeyNode.val: parentKeyNode.left  = newSubRoot
-            else:                               parentKeyNode.right = newSubRoot
-        
-        return root if root != keyNode else newSubRoot
+        if root.val == key:
+            if root.left and root.right:
+                successor, parentOfSuccessor = self.successor_node_of(root, root.left)
+                print('         ', parentOfSuccessor.val)
+                if successor.val < parentOfSuccessor.val: parentOfSuccessor.left  = successor.left
+                else:                                     parentOfSuccessor.right = successor.left
+                root.val = successor.val # finally replace the deleted_node's value with successor's value
+                print('                 ', parentOfSuccessor.val)
+                return root
+            else:
+                return root.left if root.left else root.right
+        else:
+            if key < root.val: root.left  = self.deleteNode(root.left, key)
+            else:              root.right = self.deleteNode(root.right, key)
+            return root
     
     def replace(self, curNode: TreeNode, parentNode: TreeNode, replaceNode:  TreeNode) -> None:
         if curNode.val < parentNode.val: # means curNode is the left child of parentNode
@@ -493,14 +498,11 @@ class BSTIterator: # https://leetcode.com/problems/binary-search-tree-iterator/
 
 def main() -> None:
     T = BST()
-    for v in [1,2,3]:
+    for v in [8, 4, 12, 2, 10, 13, 1, 3,  9, 11, 14]:
         T.insert1(v)
     #T.printLevelByLevel()
     #print()
-    #T.printLevelByLevel()
-    for root in T.generateTrees(3):
-        T.printLevelByLevel(root)
-        print()
+    T.printLevelByLevel(T.deleteNode(T.root, 8))
     
 
 if __name__ == '__main__':
