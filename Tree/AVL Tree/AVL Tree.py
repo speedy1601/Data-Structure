@@ -87,8 +87,8 @@ class AVL_Tree:
             root.left  = self.insert_node(root.left,  key)
         else:
             root.right = self.insert_node(root.right, key)
-                                                                            # After recursion stops going further, step 2 to 4 will run.
-        # step 2 : Balance the Node / current root and return the new root
+                                                                            # After recursion stops going further, step 2 will run.
+        # step 2 : Balance the Node / current root and return the new root to the caller function.
         return self.balance_curRoot_and_returnNewRoot(root)
         
     def already_inserted(self, root: TreeNode, key: int) -> bool:
