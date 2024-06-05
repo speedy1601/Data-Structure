@@ -74,7 +74,7 @@ node 'y'.
 ![alt text](image-8.png)
 
 - After inserting 0 : For Node 3, BF = 2 and for Node 5, BF = 3. 
-- After performing `LL` on Node 3 : Now go back to Node 5 and update its height and BF and now BF = 1 from 3 denoting no rotation is needed for Node 5. So when an IMBALANCE happens, at first it is `2 or -2`. Then when we perform on rotation on that IMBALANCED NODE, the BF becomes < 2, causing OTHER IMBALANCED NODE's BF to reduce from its old BF. Yeah you might need rotation on other imbalanced node as well. That's why we keep updating height, BF of other node as well (other node = Nodes on the Traversed Path only) and check if rotation needed.
+- After performing `LL` on Node 3 : Now go back to Node 5 and update its height and BF and now BF = 1 from 3 denoting no rotation is needed for Node 5. So when an IMBALANCE happens, at first it is `2 or -2`. Then when we perform on rotation on that IMBALANCED NODE, the BF becomes < 2, causing OTHER IMBALANCED NODE's BF to reduce from its old BF `(like for nodes with BF 3 to 2 or < 2)` and that's the reason we will always do `if current node's updated BF == 2 or -2, then perform rotation`. So you might need rotation on other imbalanced node as well. That's why we keep updating height, BF of other node as well (other node = Nodes on the Traversed Path only) and check if rotation needed.
 
 ```js
 Time  Complexity : O(logn)
