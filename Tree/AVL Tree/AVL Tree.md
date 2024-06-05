@@ -1,6 +1,8 @@
 1. Watch [first](https://youtu.be/jDM6_TnYIqE?si=EoVUw2AIFzvtLA3k) and [then](https://youtu.be/bBIhFbvavLk?si=zDFWoXJBNT3bXLym)
 2. So `To Rotate we need at least 3 nodes!`
 
+# Insertion
+
 ![alt text](image-1.png)
 
 - - Here when we added 2, we can see 1's balance factor changed. So for a BST Tree with 2 nodes, we don't need to rotate but we need to `update the height and balance factor` always, not for leaf nodes`(as their height = 0 always BEFORE AND AFTER INSERTING)` but overall ALWAYS update the heights and balance factors for every nodes.
