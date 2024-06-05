@@ -62,8 +62,8 @@ node 'y'.
             root.left  = self.insert_node(root.left,  key)
         else:
             root.right = self.insert_node(root.right, key)
-                                                                            # After recursion stops going further, step 2 to 4 will run.
-        # step 2 : Balance the Node / current root and return the new root
+                                                                    
+        # step 2 : Balance the Node / current root and return the new root to the caller function.
         return self.balance_curRoot_and_returnNewRoot(root)
 ```
 - `balance_curRoot_and_returnNewRoot(root)` here we update height and balance factor of the `current root` and then If ROTATION needed, after performing rotation we return the new root, else the `current root` itself.
