@@ -301,12 +301,12 @@ class BST:
         
         if root.val == key:
             if root.left and root.right:
+                # Delete Successor Node
                 successor, parentOfSuccessor = self.successor_node_of(root, root.left)
-                print('         ', parentOfSuccessor.val)
                 if successor.val < parentOfSuccessor.val: parentOfSuccessor.left  = successor.left
                 else:                                     parentOfSuccessor.right = successor.left
-                root.val = successor.val # finally replace the deleted_node's value with successor's value
-                print('                 ', parentOfSuccessor.val)
+                # Replace the deleted_node's value with successor's value
+                root.val = successor.val
                 return root
             else:
                 return root.left if root.left else root.right

@@ -54,6 +54,9 @@ class AVL_Tree:
         return right
 
     def balance_curRoot_and_returnNewRoot(self, root: TreeNode) -> TreeNode:
+        if root == None:
+            return None
+        
         # step 1 : update the height of the current root
         self.update_height_of(root)
 
@@ -63,22 +66,22 @@ class AVL_Tree:
         # step 3 : rotate the current root if its Balance Factor is 2 or -2
         if bf == 2 or bf == -2:
             if bf == 2:  # LL / LR
-                if root.left.balance_factor == 1:   # LL
-                    return self.rotate_right(root)
-                else: # LR
+                if root.left.balance_factor == -1:   # LR
                     root.left = self.rotate_left(root.left)
+                    return self.rotate_right(root)
+                else: # LL, if BF = 1 or 0
                     return self.rotate_right(root)
                 
             if bf == -2: # RR / RL
-                if root.right.balance_factor == -1: # RR
-                    return self.rotate_left(root)
-                else: # RL
+                if root.right.balance_factor == 1: # RL
                     root.right = self.rotate_right(root.right)
+                    return self.rotate_left(root)
+                else: # RR, if BF = -1 or 0
                     return self.rotate_left(root)
         
         return root # if bf is not 2 or -2, then this line will execute denoting root doesn't need any rotation as its balanced already
     
-    def insert_node(self,  root: TreeNode, key: int) -> TreeNode:
+    def insert_node(self,  root: TreeNode, key: int) -> TreeNode: # same as Insertion of BST except the balance...() part
         # step 1 : Insert the Node in normal BST way
         if root == None:
             return TreeNode(key)
@@ -107,70 +110,48 @@ class AVL_Tree:
             parentOfRoot = root
             root = root.right
         return (root, parentOfRoot) # (successor, parentOfSuccessor)
-
-    def deleteNode_inBSTway(self, root: TreeNode, key: int, parentNode: TreeNode, parentValue: list[int]) -> TreeNode:
+    
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode: # same as Deletion of BST except the balance...() part
+        # step 1 : Delete the Node
         if root == None:
             return None
         
         if root.val == key:
             if root.left and root.right:
+                # Delete Successor Node
                 successor, parentOfSuccessor = self.successor_node_of(root, root.left)
                 if successor.val < parentOfSuccessor.val: parentOfSuccessor.left  = successor.left
                 else:                                     parentOfSuccessor.right = successor.left
-                root.val = successor.val # finally replace the deleted_node's value with successor's value
-                parentValue[0] = parentOfSuccessor.val                  # new line
-                return root
+                # Replace the deleted_node's value with successor's value
+                root.val = successor.val
+                self.deleteNode(root.left, key) # traverse to where the successor node was 
             else:
-                parentValue[0] = parentNode.val if parentNode else None # new line
-                return root.left if root.left else root.right
+                root = root.left if root.left else root.right
         else:
-            if key < root.val: root.left  = self.deleteNode_inBSTway(root.left,  key, root, parentValue)
-            else:              root.right = self.deleteNode_inBSTway(root.right, key, root, parentValue)
-            return root
-    
-    def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
-        parentValue = [None]  # parentValue is list here
-        root = self.deleteNode_inBSTway(root, key, None, parentValue)
-        parentValue = parentValue[0] # parentValue is int here
-        if parentValue == None: return root
-
-        def toFixTheBalance_traverse(curRoot: TreeNode):
-            if curRoot.val == parentValue: # base case
-                return self.balance_curRoot_and_returnNewRoot(curRoot)
-            
-            if parentValue < curRoot.val:
-                curRoot.left  = toFixTheBalance_traverse(curRoot.left)
-            else:
-                curRoot.right = toFixTheBalance_traverse(curRoot.right)
-            
-            return self.balance_curRoot_and_returnNewRoot(curRoot)
+            if key < root.val: root.left  = self.deleteNode(root.left,  key)
+            else:              root.right = self.deleteNode(root.right, key)
         
-        self.root =  toFixTheBalance_traverse(self.root)
-        return self.root
-
-
-    def printLevelByLevel(self, root = None) -> None:
-        q = deque([root] if root else [self.root] if self.root else [])
-        while q:
-            for _ in range(len(q)):
-                curNode = q.popleft()
-                if curNode == None:
-                    print('null', end=' ')
-                    continue
-                print(f"{curNode.val}({curNode.balance_factor})", end=' ')
-                q.append(curNode.left)
-                q.append(curNode.right)
-            print()
+        # step 2 : After Deletion, update height, BF and rotate_if_necessary for EACH NODE in the TRAVERSE PATH
+        return self.balance_curRoot_and_returnNewRoot(root)
+    
+    def delete(self, key: int) -> None:
+        self.root = self.deleteNode(self.root, key)
 
 def main():
     T = AVL_Tree()
 
-    for i in range(1, 15):
+    for i in range(1, 3):
         T.insert(i)
     
     T.printLevelByLevel()
     print()
-    T.printLevelByLevel(T.deleteNode(T.root, 8))
+    
+    T.delete(int(input('Delete : ')))
+    T.printLevelByLevel()
+    print()
+
+    T.delete(int(input('Delete : ')))
+    T.printLevelByLevel()
 
 if __name__ == '__main__':
     main()

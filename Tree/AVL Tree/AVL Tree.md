@@ -80,3 +80,80 @@ node 'y'.
 Time  Complexity : O(logn)
 Space Complexity : O(logn)
 ```
+
+# Deletion
+
+- At first read [Deletion in BST (Second Solution)](https://leetcode.com/problems/delete-node-in-a-bst/solutions/5115570/with-explanation)
+1. As you can see that, if `keyNode has both left and right subtree`, we need to find the `successor`. For example :
+
+![alt text](image-9.png)
+
+- Here to delete Node `9`, we had to TRAVERSE FROM ROOT TO SUCCESSOR in total, so the `Traverse Path` : `9 -> 5 -> 7`. After deleting 9, only `Node 7 and 5`'s BF is changed means `only Nodes from the Traverse Path need to be updated`, others are unchanged.
+- - 6's BF didn't change, not because its leaf node, because 6's BF will be changed if the deletion or insertion happens in the Subtree of 6.
+
+![alt text](image-10.png)
+
+- The `Red Box` is executed when `keyNode has both left and right subtree`, here we've separate function (`successor_node_of(root..`) to find the `successor` means in this `Recursion of deleteNode() function` we don't actually traverse RECURSIVELY till the `keyNode`, we traverse only to the `keyNode` itself. But we've to go till the `keyNode RECURSIVELY TO UPDATE BF of all the nodes in the Traverse Path`. So at the last line of `return root`, we will say `okay now traverse the left subtree of the keyNode and go till the successor node recursively` by `self.deleteNode(root.left, key)`
+
+![alt text](image-11.png)
+
+- So from `keyNode 9`, if we go left i.e. `5`, then this `self.deleteNode(root.left, key)` function will go eventually to `successor, 7` to find `keyNode 9`. That's how we can go to where successor node was RECURSIVELY.. Now before the recursion function will go back one by one to its FIRST function call, root node, we will update the BF of `nodes in the Traverse Path` and apply rotation if required.
+2. When the keyNode doen't have either left or right subtree or nothing, then the `Traverse Path` is the path `we traverse to go to keyNode to delete it`. 
+
+## Code
+```py
+    def deleteNode(self, root: TreeNode, key: int) -> TreeNode: # same as Deletion of BST except the balance...() part
+        # step 1 : Delete the Node
+        if root == None:
+            return None
+        
+        if root.val == key:
+            if root.left and root.right:
+                # Delete Successor Node
+                successor, parentOfSuccessor = self.successor_node_of(root, root.left)
+                if successor.val < parentOfSuccessor.val: parentOfSuccessor.left  = successor.left
+                else:                                     parentOfSuccessor.right = successor.left
+                # Replace the deleted_node's value with successor's value
+                root.val = successor.val
+                self.deleteNode(root.left, key) # traverse to where the successor node was 
+            else:
+                root = root.left if root.left else root.right
+        else:
+            if key < root.val: root.left  = self.deleteNode(root.left,  key)
+            else:              root.right = self.deleteNode(root.right, key)
+        
+        # step 2 : After Deletion, update height, BF and rotate_if_necessary for EACH NODE in the TRAVERSE PATH
+        return self.balance_curRoot_and_returnNewRoot(root)
+```
+
+- We only return at the Base Case and at the END OF THE RECURSION FUNCTION because we have to return the `balance_curRoot_and_returnNewRoot(root)` version, not `root` version where BF can be imbalanced.
+
+```js
+Time  Complexity : O(logn)
+Space Complexity : O(logn)
+```
+
+## Sometimes a node's height and BF gets recomputed but the value remains unchanged.
+
+![alt text](image-12.png)
+
+- `root = 13`, lets do `balance_curRoot_and_returnNewRoot(root)` even though in the image `height and BF` are already computed.
+```js
+    Leaf Node's intitial height = 0
+
+    // step 1 : update the height of the current root
+    root.height = 1 + max(self.get_height(root.left), self.get_height(root.right))
+                = 1 + max(0, 0)
+                = 1 + 0
+    13.height   = 1
+    
+    // step 2 : update the Balance Factor of the current root
+    root.balance_factor = self.get_height(root.left) - self.get_height(root.right)
+                        = 0 - 0
+    13.balance_factor   = 0
+
+    So 13.height and 13.balance_factor remained UNCHANGED! That's why we don't have to worry if a node's height and balance
+    factor getting recomputed even after the node is already balanced.
+```
+
+## The Whole Code written in the `AVL Tree.py` file.
